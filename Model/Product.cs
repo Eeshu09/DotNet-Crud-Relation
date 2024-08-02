@@ -25,4 +25,18 @@ namespace Crud.Model
         
       
     }
+    public class Product1Dto
+    {
+
+        public int Id { get; set; }
+        public string ProductName { get; set; }
+        public string? ProductDescription { get; set; } = string.Empty;
+        public int ProductPrice { get; set; }
+
+
+
+
+
+    }
+
 }

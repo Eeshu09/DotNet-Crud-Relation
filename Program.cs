@@ -1,4 +1,5 @@
 using Crud.Context;
+using Crud.DI;
 using Crud.Interface;
 using Crud.Services;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,14 @@ builder.Services.AddDbContext<UserContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("UsersCS")));
 
 
-builder.Services.AddScoped<IUser,UserService>();
-builder.Services.AddScoped<IProduct,ProductService>();
+//builder.Services.AddScoped<IUser,UserService>();
+//builder.Services.AddScoped<IProduct,ProductService>();
+
+builder.Services.DI();
+
 //Register to Mapper
 
-builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

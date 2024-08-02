@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Crud.Context;
+using Crud.Dto;
 using Crud.Interface;
 using Crud.Model;
 using Microsoft.EntityFrameworkCore;
@@ -25,5 +26,38 @@ namespace Crud.Services
             return return1;
 
         }
+
+
+ 
+
+        public async Task<UserProductDto> getUserProduct(int UserId)
+        {
+            var user = await _dbContext.users.Include(u => u.Products).FirstOrDefaultAsync(u=>u.Id == UserId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var userProductDto = new UserProductDto
+            {
+                UserId = user.Id,
+                Name = user.name,
+                Email = user.email,
+                Address = user.address,
+                Products = user.Products.Select(product => new Product1Dto
+                {
+                    Id = product.Id,
+                    ProductName = product.ProductName,
+                    ProductPrice = product.ProductPrice,
+                    ProductDescription = product.ProductDescription,
+                }).ToList()
+            };
+
+            return userProductDto;
+        }
     }
+
+
 }
+
