@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+##Crud using Interface and Service
+##Making Dto and mapper class
+##Make dependency Injection folder
+##Make sort pagination and filter
+##make Exception Component
+
 # User-specific files
 *.rsuser
 *.suo
