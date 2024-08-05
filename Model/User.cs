@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sieve.Attributes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Crud.Model
@@ -7,6 +8,7 @@ namespace Crud.Model
     {
         [Key]
         public int Id { get; set; }
+        [Sieve(CanFilter=true,CanSort=true)]
         public string name { get; set; }
         public string email { get; set; }
         public string password { get; set; }

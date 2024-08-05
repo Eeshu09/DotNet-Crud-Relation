@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using AutoMapper;
+using Sieve.Models;
 
 namespace Crud.Services
 {
@@ -43,12 +44,23 @@ namespace Crud.Services
 
         public  async Task<User> GetUserById(int id)
         {
-            var result = await _dbContext.users.FindAsync(id);
-            if (result==null)
+            try
             {
-                return null;
+                var result = await _dbContext.users.FindAsync(id);
+                if (result==null)
+                {
+                    throw new Exception("Geeting EXECPIITN WHILE FETCHING data");
+                }
+                return result;
+            }catch(Exception ex) {
+                return BadRequest("Internal Server Erro");
             }
-            return result;
+           
+        }
+
+        private User BadRequest(string v)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<User> UpdateUser(int id, User user)
@@ -86,12 +98,13 @@ namespace Crud.Services
             var mapdata=_Map.Map<List<UserDto>>(data);
             return mapdata;
         }
-
-        public Task<User> AddUser(User user)
+        
+      
+        public async Task <IQueryable<User>>GetAllUsersQuery()
         {
-            throw new NotImplementedException();
+            return   _dbContext.users.AsQueryable();
         }
 
-       
+     
     }
 }

@@ -2,6 +2,8 @@
 using Crud.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace Crud.Controllers
 {
@@ -10,15 +12,21 @@ namespace Crud.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUser _userService;
-        public UserController(IUser userService)
+        private readonly SieveProcessor _sieveProcessor;
+        public UserController(IUser userService ,SieveProcessor sieveProcessor)
         {
             _userService=userService;
+            _sieveProcessor=sieveProcessor; 
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUser()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUser([FromQuery] SieveModel model)
         {
-            var users = await _userService.GetAllUser();
-            return Ok(users);
+            var users = await  _userService.GetAllUsersQuery();
+            var filters=_sieveProcessor.Apply(model, users);  
+            return Ok(filters);
+
+            //users=_sieveProcessor.Apply(/*model*/, users);
+            //return Ok(users);
             // return Ok(_userService.GetAllUser());
         }
         [HttpPost]

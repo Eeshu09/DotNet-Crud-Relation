@@ -3,6 +3,7 @@ using Crud.DI;
 using Crud.Interface;
 using Crud.Services;
 using Microsoft.EntityFrameworkCore;
+using Sieve.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("UsersCS")));
 //builder.Services.AddScoped<IProduct,ProductService>();
 
 builder.Services.DI();
-
+//builder.Services.AddSingleton<SieveProcessor>();
 //Register to Mapper
 
 
@@ -36,6 +37,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 
 app.MapControllers();
 
