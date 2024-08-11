@@ -20,6 +20,7 @@ namespace Crud.Context
         }
         public DbSet<User> users { get; set; }
         public DbSet<Product>Products { get; set; } 
+        public DbSet<Driver>Drivers { get; set; }
 
     }
 }

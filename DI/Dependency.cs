@@ -12,6 +12,7 @@ namespace Crud.DI
         {
             services.AddScoped<IUser, UserService>();
             services.AddScoped<IProduct, ProductService>();
+            services.AddScoped<IDriver,DriverService>();
             services.AddSingleton<SieveProcessor>();
             services.AddAutoMapper(typeof(Program));
             
