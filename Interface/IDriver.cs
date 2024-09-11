@@ -6,6 +6,8 @@ namespace Crud.Interface
     {
         public  string ImportExcel(IFormFile file);
         Task<List<Driver>> GetALL(int page);
-       
+        Task<byte[]> GenerateExcelAsync();
+
+        //public string DownloadExcel();
     }
 }

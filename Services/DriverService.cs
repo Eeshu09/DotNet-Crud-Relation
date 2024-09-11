@@ -17,6 +17,48 @@ namespace Crud.Services
             _userContext = userContext;
         }
 
+
+        public async Task<byte[]> GenerateExcelAsync()
+        {
+            var data = new List<Driver>
+        {
+            new Driver { Name = "John Doe", Description = "Software Engineer", Area = "Engineering" },
+            new Driver { Name = "Jane Smith", Description = "Product Manager", Area = "Product" }
+            // Add more records as needed
+        };
+
+            using (var stream = new MemoryStream())
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (var package = new ExcelPackage(stream))
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Drivers");
+
+                    // Add header
+                    worksheet.Cells[1, 1].Value = "Name";
+                    worksheet.Cells[1, 2].Value = "Description";
+                    worksheet.Cells[1, 3].Value = "Area";
+
+                    // Add data
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        var driver = data[i];
+                        worksheet.Cells[i + 2, 1].Value = driver.Name;
+                        worksheet.Cells[i + 2, 2].Value = driver.Description;
+                        worksheet.Cells[i + 2, 3].Value = driver.Area;
+                    }
+
+                    // Auto-fit columns
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                    package.Save();
+                }
+
+                return stream.ToArray();
+            }
+        }
+
         public  async Task<List<Driver>> GetALL(int page)        {
             
             var result = await _userContext.Drivers

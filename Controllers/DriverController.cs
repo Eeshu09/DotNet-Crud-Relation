@@ -1,7 +1,9 @@
 ﻿using Crud.Interface;
 using Crud.Model;
+using Crud.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 
 namespace Crud.Controllers
 {
@@ -21,11 +23,27 @@ namespace Crud.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Driver>>> GetAll(int page=1)
+        public async Task<ActionResult<IEnumerable<Driver>>> GetAll(int page = 1)
         {
-            var result=await _driver.GetALL(page);
+            var result = await _driver.GetALL(page);
             return Ok(result);
+        }
+        [HttpGet("download")]
+        public async Task<IActionResult> DownloadExcel()
+        {
+            try
+            {
+                var content = await _driver.GenerateExcelAsync();
+                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                var fileName = "Drivers.xlsx";
 
+                return File(content, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
     }
 }
