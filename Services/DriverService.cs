@@ -2,6 +2,7 @@
 using Crud.Interface;
 using Crud.Model;
 using ExcelDataReader;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using OfficeOpenXml;
@@ -59,16 +60,22 @@ namespace Crud.Services
             }
         }
 
-        public  async Task<List<Driver>> GetALL(int page)        {
-            
-            var result = await _userContext.Drivers
-        .Skip((page - 1) * 10)
-        .Take(10)
-        .ToListAsync();
+        public async Task<List<Driver>> GetALL(int page)
+        {
 
+            //    var result = await _userContext.Drivers.Where(x=>x.Area=="Goa")
+            //.Skip((page - 1) * 10)
+            //.Take(10)
+            //.ToListAsync();
+
+            //    return result;
+            //}
+            var result = await (from obj in _userContext.Drivers
+                                where obj.Area =="Goa"
+                                select obj).
+                              Skip((page-1)*10).Take(10).ToListAsync();
             return result;
         }
-
         public string ImportExcel(IFormFile file)
         {
             try
