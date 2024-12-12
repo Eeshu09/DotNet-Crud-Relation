@@ -71,7 +71,7 @@ namespace Crud.Services
             //    return result;
             //}
             var result = await (from obj in _userContext.Drivers
-                                where obj.Area =="Goa"
+                                //where obj.Area =="Goak"
                                 select obj).
                               Skip((page-1)*10).Take(10).ToListAsync();
             return result;
