@@ -14,6 +14,7 @@ namespace Crud.Model
         public string password { get; set; }
         public string address { get; set; }
 
+
         public ICollection<Product> Products { get; set; }
     }
     public class UserDto
