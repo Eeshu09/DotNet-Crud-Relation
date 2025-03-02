@@ -1,5 +1,6 @@
 ﻿using Crud.Interface;
 using Crud.Model;
+using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sieve.Models;
@@ -13,10 +14,15 @@ namespace Crud.Controllers
     {
         private readonly IUser _userService;
         private readonly SieveProcessor _sieveProcessor;
-        public UserController(IUser userService ,SieveProcessor sieveProcessor)
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly IHangFireJobs _hanFireJobs;
+
+        public UserController(IUser userService ,SieveProcessor sieveProcessor,IBackgroundJobClient backgroundJobClient,IHangFireJobs hangFireJobs)
         {
             _userService=userService;
-            _sieveProcessor=sieveProcessor; 
+            _sieveProcessor=sieveProcessor;
+            _backgroundJobClient = backgroundJobClient;
+            _hanFireJobs = hangFireJobs;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUser([FromQuery] SieveModel model)

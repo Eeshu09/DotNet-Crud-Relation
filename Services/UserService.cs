@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using AutoMapper;
+using Hangfire;
+
 using Sieve.Models;
 
 namespace Crud.Services
@@ -14,16 +16,23 @@ namespace Crud.Services
     {
         private readonly UserContext _dbContext;
         private IMapper _Map;
-         public UserService(UserContext dbContext,IMapper Map)
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly IHangFireJobs _hanFireJobs;
+        public UserService(UserContext dbContext,IMapper Map,IBackgroundJobClient backgroundJobClient, IHangFireJobs hangFireJobs)
         {
             _dbContext =dbContext;
             _Map = Map;
+            _backgroundJobClient = backgroundJobClient;
+            _hanFireJobs = hangFireJobs;
+            
         }
         public async Task<User> AddUser(UserDto user)
         {;
             var mapData = _Map.Map<User>(user);
-            var data = await _dbContext.users.AddAsync(mapData); // Assuming the DbSet<User> is named Users
+            var data = await _dbContext.users.AddAsync(mapData); 
          await  _dbContext.SaveChangesAsync();
+            var (subject, emailBody) = GetWelcomeMessage(user.name,"847865");
+            _backgroundJobClient.Enqueue(() => _hanFireJobs.SendMail(user.email, subject, emailBody));
             return data.Entity;
 
         }
@@ -104,7 +113,20 @@ namespace Crud.Services
         {
             return   _dbContext.users.AsQueryable();
         }
+        public static (string subject, string emailBody) GetWelcomeMessage(string name, string password)
+        {
+            string subject = "Welcome to My Crud";
+            string emailBody = $@"
+<div style='font-family: Arial, sans-serif; text-align: center; background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd;'>
+    <h2 style='color: #333;'>Welcome to My Crud</h2>
+    <p style='font-size: 16px; color: #555;'>Dear {name},</p>
+    <p style='font-size: 16px; color: #555;'>Your account has been successfully created. Below are your login details:</p>
+    <p style='font-size: 16px; color: #333;'><strong>Password:</strong> {password}</p>
+    <p style='font-size: 16px; color: #555;'>Please log in and change your password at your earliest convenience.</p>
+    <p style='font-size: 16px; color: #555;'>Thank you,<br/>[Kalash]</p>
+</div>";
+            return (subject, emailBody);
+        }
 
-     
     }
 }

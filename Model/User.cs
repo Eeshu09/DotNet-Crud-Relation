@@ -10,7 +10,12 @@ namespace Crud.Model
         public int Id { get; set; }
         [Sieve(CanFilter=true,CanSort=true)]
         public string name { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
+
+
         public string email { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
+
         public string password { get; set; }
         public string address { get; set; }
 
