@@ -8,6 +8,10 @@
 ##Make dependency Injection folder
 ##Make sort pagination and filter
 ##make Exception Component
+#implement handfire for sending Email
+#Download Excel file
+#Uploda data in database using Excel
+
 
 # User-specific files
 *.rsuser
